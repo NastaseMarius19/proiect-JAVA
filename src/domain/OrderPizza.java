@@ -5,6 +5,11 @@ import java.util.Scanner;
 public class OrderPizza extends Order{
     private String doughOption;
 
+    public OrderPizza(String nameRestaurant, String homeAddress, String payMethod, String doughOption) {
+        super(nameRestaurant, homeAddress, payMethod);
+        this.doughOption = doughOption;
+    }
+
     @Override
     public String toString() {
         return

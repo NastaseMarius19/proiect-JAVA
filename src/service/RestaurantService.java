@@ -7,10 +7,11 @@ import src.domain.RestaurantSusshi;
 import src.exceptions.InvalidDataException;
 import src.persistence.RestaurantRepository;
 
+import java.io.IOException;
 import java.security.cert.CertificateParsingException;
 import java.util.*;
 
-public class RestaurantService {
+public class RestaurantService implements GenericRestaurantCSV {
     private RestaurantRepository restaurantRepository = new RestaurantRepository();
 
     public void registerCoffeRestaurant(RestaurantCoffe newRestaurant) throws InvalidDataException {
@@ -129,5 +130,25 @@ public class RestaurantService {
             newToppings.add(keyboard.next());
         }
         restaurantSusshi.setToppings(newToppings);
+    }
+
+    @Override
+    public void read() throws IOException {
+
+    }
+
+    @Override
+    public void writePizzaRestaurant(RestaurantPizza object) throws IOException {
+
+    }
+
+    @Override
+    public void writeSushiRestaurant(RestaurantSusshi object) throws IOException {
+
+    }
+
+    @Override
+    public void writeCoffeRestaurant(RestaurantCoffe object) throws IOException {
+
     }
 }

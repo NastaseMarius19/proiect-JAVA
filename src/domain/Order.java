@@ -17,6 +17,12 @@ public class Order {
         id ++;
     }
 
+    public Order(String nameRestaurant, String homeAddress, String payMethod) {
+        this.nameRestaurant = nameRestaurant;
+        this.homeAddress = homeAddress;
+        this.payMethod = payMethod;
+    }
+
     public String getNameRestaurant() {
         return nameRestaurant;
     }

@@ -1,8 +1,15 @@
 package src.domain;
 
-import java.util.Scanner;
-
 public class OrderCoffe extends Order{
+    private String optionCoffe;
+    private String optionSizeCup;
+
+    public OrderCoffe(String nameRestaurant, String homeAddress, String payMethod, String optionCoffe, String optionSizeCup) {
+        super(nameRestaurant, homeAddress, payMethod);
+        this.optionCoffe = optionCoffe;
+        this.optionSizeCup = optionSizeCup;
+    }
+
     public String getOptionCoffe() {
         return optionCoffe;
     }
@@ -10,9 +17,6 @@ public class OrderCoffe extends Order{
     public String getOptionSizeCup() {
         return optionSizeCup;
     }
-
-    private String optionCoffe;
-    private String optionSizeCup;
 
     @Override
     public String toString() {

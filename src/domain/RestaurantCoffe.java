@@ -3,7 +3,6 @@ package src.domain;
 import src.persistence.GenericRestaurant;
 
 import java.util.ArrayList;
-import java.util.Scanner;
 
 public class RestaurantCoffe extends Restaurant implements GenericRestaurant<String > {
 
@@ -26,5 +25,6 @@ public class RestaurantCoffe extends Restaurant implements GenericRestaurant<Str
     public void setSizeCup(ArrayList<String > sizeCup){
         this.sizeCup = sizeCup;
     }
+
 
 }

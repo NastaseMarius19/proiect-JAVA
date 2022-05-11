@@ -1,16 +1,16 @@
 package src.service;
 
-import com.sun.org.apache.xpath.internal.operations.Or;
 import src.domain.*;
 import src.exceptions.InvalidDataException;
 import src.persistence.OrderRepository;
 import src.persistence.RestaurantRepository;
 
+import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
-public class OrderService {
+public class OrderService implements GenericOrderCSV {
     private OrderRepository orderRepository = new OrderRepository();
 
     public void registerNewPizzaOrder(OrderPizza newPizzaOrder) throws InvalidDataException {
@@ -233,4 +233,75 @@ public class OrderService {
         }
         else System.out.println("Invalid option");
     }
+
+
+    @Override
+    public void read() throws IOException {
+        String line = "";
+        try {
+            BufferedReader file1 = new BufferedReader(new FileReader("files/ordersCoffee.csv"));
+            BufferedReader file2 = new BufferedReader(new FileReader("files/ordersPizza.csv"));
+            BufferedReader file3 = new BufferedReader(new FileReader("files/ordersSushi.csv"));
+            while ((line = file1.readLine()) != null){
+                String[] values = line.split(",");
+                OrderCoffe orderCoffe = new OrderCoffe(values[0], values[1], values[2], values[3], values[4]);
+                orderRepository.add(orderCoffe);
+            }
+            while ((line = file2.readLine()) != null){
+                String[] values = line.split(",");
+                OrderPizza orderPizza = new OrderPizza(values[0], values[1], values[2], values[3]);
+                orderRepository.add(orderPizza);
+            }
+            while ((line = file3.readLine()) != null){
+                String[] values = line.split(",");
+                OrderSushi orderSushi = new OrderSushi(values[0], values[1], values[2], values[3]);
+                orderRepository.add(orderSushi);
+            }
+        }catch (FileNotFoundException e){
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void writePizzaOrder(OrderPizza object) throws IOException {
+        try{
+            FileWriter fw = new FileWriter("files/ordersPizza.csv",true);
+            fw.write("\n" + object.getId() + "," + object.getNameRestaurant() + "," + object.getHomeAddress()
+                    + "," + object.getPayMethod() + "," + object.getDoughOption()
+                    + ",");
+            fw.close();
+
+        }catch (IOException e){
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void writeCoffeOrder(OrderCoffe object) throws IOException {
+        try{
+            FileWriter fw = new FileWriter("files/ordersCoffes.csv",true);
+            fw.write("\n" + object.getId() + "," + object.getNameRestaurant() + "," + object.getHomeAddress()
+                    + "," + object.getPayMethod() + "," + object.getOptionCoffe() + "," + object.getOptionSizeCup()
+                    + ",");
+            fw.close();
+
+        }catch (IOException e){
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void writeSushiOrder(OrderSushi object) throws IOException {
+        try{
+            FileWriter fw = new FileWriter("files/ordersSushi.csv",true);
+            fw.write("\n" + object.getId() + "," + object.getNameRestaurant() + "," + object.getHomeAddress()
+                    + "," + object.getPayMethod() + "," + object.getExtraTopping()
+                    + ",");
+            fw.close();
+
+        }catch (IOException e){
+            e.printStackTrace();
+        }
+    }
+
 }

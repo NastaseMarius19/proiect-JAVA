@@ -5,7 +5,9 @@ import src.exceptions.InvalidDataException;
 import src.service.OrderService;
 import src.service.RestaurantService;
 
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Scanner;
 
 public class ConsoleApp {
@@ -13,9 +15,18 @@ public class ConsoleApp {
     private final Scanner keyboard = new Scanner(System.in);
     private final RestaurantService restaurantService = new RestaurantService();
     private final OrderService orderService = new OrderService();
-    
+
+    private void loadCSVfiles(){
+        try {
+            orderService.read();
+        }catch (IOException e)
+        {
+            throw new RuntimeException(e);
+        }
+    }
     public static void main(String [] args) throws InvalidDataException {
         ConsoleApp app = new ConsoleApp();
+        app.loadCSVfiles();
         while (true){
             app.showMenu();
             int option = app.readOption();
@@ -64,17 +75,17 @@ public class ConsoleApp {
             {
                 boolean check = false;
                 for (int i = 0; i < restaurantService.getRestaurantRepository().getSize(); i++)
-                    if(restaurantService.getRestaurantRepository().get(i).getClass() == (new RestaurantPizza(null,null,null)).getClass())
+                    if(restaurantService.getRestaurantRepository().get(i).getClass() == RestaurantPizza.class)
                     {
                         check = true;
                         break;
                     }
-                if(check == false) {
+                if(!check) {
                     System.out.println("Add first an pizza restaurant");
                     break;
                 }
                 else {
-                    OrderPizza newOrder = new OrderPizza();
+                    OrderPizza newOrder = new OrderPizza(null, null, null, null);
                     orderService.setOrder(newOrder);
                     orderService.setPizzaRestaurant(restaurantService.getRestaurantRepository(), newOrder);
                     for (int i = 0; i < restaurantService.getRestaurantRepository().getSize(); i++){
@@ -91,17 +102,17 @@ public class ConsoleApp {
             {
                 boolean check = false;
                 for (int i = 0; i < restaurantService.getRestaurantRepository().getSize(); i++)
-                    if(restaurantService.getRestaurantRepository().get(i).getClass() == (new RestaurantCoffe(null,null,null)).getClass())
+                    if(restaurantService.getRestaurantRepository().get(i).getClass() == RestaurantCoffe.class)
                     {
                         check = true;
                         break;
                     }
-                if(check == false){
+                if(!check){
                     System.out.println("Add first an coffe restaurant");
                     break;
                 }
                 else {
-                    OrderCoffe newOrder = new OrderCoffe();
+                    OrderCoffe newOrder = new OrderCoffe(null, null, null, null,null);
                     orderService.setOrder(newOrder);
                     orderService.setCoffeRestaurant(restaurantService.getRestaurantRepository(), newOrder);
                     for (int i = 0; i < restaurantService.getSizeRepository(); i++)
@@ -118,23 +129,21 @@ public class ConsoleApp {
             {
                 boolean check = false;
                 for (int i = 0; i < restaurantService.getRestaurantRepository().getSize(); i++)
-                    if(restaurantService.getRestaurantRepository().get(i).getClass() == (new RestaurantSusshi(null,null,null)).getClass())
+                    if(restaurantService.getRestaurantRepository().get(i).getClass() == RestaurantSusshi.class)
                     {
                         check = true;
                         break;
                     }
-                if(check == false){
+                if(!check){
                     System.out.println("Add first an sushi restaurant");
                     break;
                 }
                 else {
-                    OrderSushi newOrder = new OrderSushi();
+                    OrderSushi newOrder = new OrderSushi(null,null,null,null);
                     orderService.setOrder(newOrder);
                     orderService.setSushiRestaurant(restaurantService.getRestaurantRepository(), newOrder);
                     for (int i = 0; i < restaurantService.getSizeRepository(); i++)
                         if (restaurantService.getRestaurantRepository().get(i).getName().equals(newOrder.getNameRestaurant())) {
-//                            orderService.chooseCoffe(restaurantService.getRestaurantRepository().getCoffeRestaurant(i), newOrder);
-//                            orderService.chooseSizeCup(restaurantService.getRestaurantRepository().getCoffeRestaurant(i), newOrder);
                             orderService.chooseExtraTopping(restaurantService.getRestaurantRepository().getSushiRestaurant(i), newOrder);
                             break;
                         }
@@ -150,7 +159,7 @@ public class ConsoleApp {
     }
 
     private void selectRestaurant() {
-        String nameRestaurant = new String();
+        String nameRestaurant;
         System.out.println("Enter the restaurant name:");
         nameRestaurant = keyboard.nextLine();
         if(restaurantService.getRestaurantIndex(nameRestaurant)!= null)
@@ -164,7 +173,7 @@ public class ConsoleApp {
         int option;
         System.out.println("1 - Coffe Restaurant");
         System.out.println("2 - Pizza Restaurant");
-        System.out.printf("3 - Sushi Restaurant");
+        System.out.println("3 - Sushi Restaurant");
         option = keyboard.nextInt();
         System.out.println("Enter the name:");
         String name = keyboard.next();
@@ -177,10 +186,7 @@ public class ConsoleApp {
         for (int i = 0; i < menuC.length; i++) {
             menuC[i] = keyboard.nextLine();
         }
-        for (int i = 0; i < menuC.length; i++)
-        {
-            menu.add(menuC[i]);
-        }
+        Collections.addAll(menu, menuC);
         switch (option){
             case 1:
             {
@@ -211,7 +217,7 @@ public class ConsoleApp {
             int option = readInt();
             if (option >= 1 && option <= 8)
                 return option;
-        }catch (InvalidDataException invalid){
+        }catch (InvalidDataException ignored){
 
         }
         System.out.println("Invalid option. Try again");
