@@ -3,6 +3,7 @@ package src.persistence;
 import src.domain.Restaurant;
 import src.domain.RestaurantCoffe;
 import src.domain.RestaurantPizza;
+import src.domain.RestaurantSusshi;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -43,6 +44,12 @@ public class RestaurantRepository implements GenericRepository<Restaurant>{
     public RestaurantPizza getPizzaRestaurant(int id){
         if(pubs.get(id).getClass() == (new RestaurantPizza(null,null,null)).getClass())
             return (RestaurantPizza) pubs.get(id);
+        return null;
+    }
+
+    public RestaurantSusshi getSushiRestaurant(int id){
+        if(pubs.get(id).getClass() == (new RestaurantSusshi(null,null,null)).getClass())
+            return (RestaurantSusshi) pubs.get(id);
         return null;
     }
 

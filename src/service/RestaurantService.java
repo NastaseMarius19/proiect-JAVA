@@ -3,6 +3,7 @@ package src.service;
 import src.domain.Restaurant;
 import src.domain.RestaurantCoffe;
 import src.domain.RestaurantPizza;
+import src.domain.RestaurantSusshi;
 import src.exceptions.InvalidDataException;
 import src.persistence.RestaurantRepository;
 
@@ -52,6 +53,20 @@ public class RestaurantService {
         restaurantRepository.add(newRestaurant);
     }
 
+    public void registerSushiRestaurant(RestaurantSusshi newRestaurant) throws InvalidDataException {
+        if (newRestaurant.getName() == null || newRestaurant.getName().trim().isEmpty()){
+            throw new InvalidDataException("Invalid name");
+        }
+        if(newRestaurant.getAddress() == null || newRestaurant.getAddress().trim().isEmpty()){
+            throw new InvalidDataException("Invalid address");
+        }
+        if(newRestaurant.getMenu() == null || newRestaurant.getMenu().isEmpty())
+        {
+            throw new InvalidDataException("Invalid menu");
+        }
+        restaurantRepository.add(newRestaurant);
+    }
+
     public Restaurant[] getRestaurantWithName(String name){
         List<Restaurant> result = new ArrayList<>();
         for(int i = 0; i < restaurantRepository.getSize(); i++){
@@ -79,5 +94,40 @@ public class RestaurantService {
         }
     }
 
+    public void setSizeCup(RestaurantCoffe restaurantCoffe){
+        System.out.println("Enter the noumber of options to add:");
+        Scanner keyboard = new Scanner(System.in);
+        int optionsNr = keyboard.nextInt();
+        ArrayList<String> options = new ArrayList<>();
+        for (int i = 0; i < optionsNr ; i++)
+        {
+            System.out.println("Enter the size cup " + (i+1) + " option:");
+            options.add(keyboard.next());
+        }
+        restaurantCoffe.setSizeCup(options);
+    }
 
+    public void setDoughOpions(RestaurantPizza restaurantPizza) {
+        System.out.println("Enter the noumber of options to add:");
+        Scanner keyboard = new Scanner(System.in);
+        int optionsNr = keyboard.nextInt();
+        ArrayList<String> options = new ArrayList<>();
+        for (int i = 0; i < optionsNr; i++) {
+            System.out.println("Enter the " + i + " option:");
+            options.add(keyboard.next());
+        }
+        restaurantPizza.setDoughOpions(options);
+    }
+
+    public void addToppings(RestaurantSusshi restaurantSusshi){
+        System.out.printf("Enter the number of toppings options:");
+        Scanner keyboard = new Scanner(System.in);
+        int optionsNr = keyboard.nextInt();
+        ArrayList<String > newToppings = new ArrayList<>();
+        for (int i = 0; i < optionsNr; i++){
+            System.out.println("Enter the " + i + " option:");
+            newToppings.add(keyboard.next());
+        }
+        restaurantSusshi.setToppings(newToppings);
+    }
 }

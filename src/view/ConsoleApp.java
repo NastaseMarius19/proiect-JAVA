@@ -10,9 +10,9 @@ import java.util.Scanner;
 
 public class ConsoleApp {
     
-    private Scanner keyboard = new Scanner(System.in);
-    private RestaurantService restaurantService = new RestaurantService();
-    private OrderService orderService = new OrderService();
+    private final Scanner keyboard = new Scanner(System.in);
+    private final RestaurantService restaurantService = new RestaurantService();
+    private final OrderService orderService = new OrderService();
     
     public static void main(String [] args) throws InvalidDataException {
         ConsoleApp app = new ConsoleApp();
@@ -57,7 +57,7 @@ public class ConsoleApp {
     }
 
     private void makeOrder() throws InvalidDataException {
-        System.out.println("Select the type of order: 1 - pizza order ----- 2 - coffe order");
+        System.out.println("Select the type of order: 1 - pizza order , 2 - coffe order , 3 - sushi");
         int option = keyboard.nextInt();
         switch (option){
             case 1:
@@ -75,12 +75,11 @@ public class ConsoleApp {
                 }
                 else {
                     OrderPizza newOrder = new OrderPizza();
-                    newOrder.chooseHomeAddress();
-                    newOrder.setPayMethod();
-                    newOrder.setPizzaRestaurant(restaurantService.getRestaurantRepository());
+                    orderService.setOrder(newOrder);
+                    orderService.setPizzaRestaurant(restaurantService.getRestaurantRepository(), newOrder);
                     for (int i = 0; i < restaurantService.getRestaurantRepository().getSize(); i++){
                         if(restaurantService.getRestaurantRepository().get(i).getName().equals(newOrder.getNameRestaurant())){
-                            newOrder.chooseDoughPizza(restaurantService.getRestaurantRepository().getPizzaRestaurant(i));
+                            orderService.chooseDoughPizza(restaurantService.getRestaurantRepository().getPizzaRestaurant(i), newOrder);
                             break;
                         }
                     }
@@ -103,16 +102,43 @@ public class ConsoleApp {
                 }
                 else {
                     OrderCoffe newOrder = new OrderCoffe();
-                    newOrder.chooseHomeAddress();
-                    newOrder.setPayMethod();
-                    newOrder.setCoffeRestaurant(restaurantService.getRestaurantRepository());
+                    orderService.setOrder(newOrder);
+                    orderService.setCoffeRestaurant(restaurantService.getRestaurantRepository(), newOrder);
                     for (int i = 0; i < restaurantService.getSizeRepository(); i++)
                         if (restaurantService.getRestaurantRepository().get(i).getName().equals(newOrder.getNameRestaurant())) {
-                            newOrder.chooseCoffe(restaurantService.getRestaurantRepository().getCoffeRestaurant(i));
-                            newOrder.chooseSizeCup(restaurantService.getRestaurantRepository().getCoffeRestaurant(i));
+                            orderService.chooseCoffe(restaurantService.getRestaurantRepository().getCoffeRestaurant(i), newOrder);
+                            orderService.chooseSizeCup(restaurantService.getRestaurantRepository().getCoffeRestaurant(i), newOrder);
                             break;
                         }
                     orderService.registerNewCoffeOrder(newOrder);
+                    break;
+                }
+            }
+            case 3:
+            {
+                boolean check = false;
+                for (int i = 0; i < restaurantService.getRestaurantRepository().getSize(); i++)
+                    if(restaurantService.getRestaurantRepository().get(i).getClass() == (new RestaurantSusshi(null,null,null)).getClass())
+                    {
+                        check = true;
+                        break;
+                    }
+                if(check == false){
+                    System.out.println("Add first an sushi restaurant");
+                    break;
+                }
+                else {
+                    OrderSushi newOrder = new OrderSushi();
+                    orderService.setOrder(newOrder);
+                    orderService.setSushiRestaurant(restaurantService.getRestaurantRepository(), newOrder);
+                    for (int i = 0; i < restaurantService.getSizeRepository(); i++)
+                        if (restaurantService.getRestaurantRepository().get(i).getName().equals(newOrder.getNameRestaurant())) {
+//                            orderService.chooseCoffe(restaurantService.getRestaurantRepository().getCoffeRestaurant(i), newOrder);
+//                            orderService.chooseSizeCup(restaurantService.getRestaurantRepository().getCoffeRestaurant(i), newOrder);
+                            orderService.chooseExtraTopping(restaurantService.getRestaurantRepository().getSushiRestaurant(i), newOrder);
+                            break;
+                        }
+                    orderService.registerNewSushiOrder(newOrder);
                     break;
                 }
             }
@@ -138,12 +164,13 @@ public class ConsoleApp {
         int option;
         System.out.println("1 - Coffe Restaurant");
         System.out.println("2 - Pizza Restaurant");
+        System.out.printf("3 - Sushi Restaurant");
         option = keyboard.nextInt();
         System.out.println("Enter the name:");
         String name = keyboard.next();
         System.out.println("Enter the address:");
         String address = keyboard.next();
-        System.out.println("Enter the noumber of options:");
+        System.out.println("Enter the noumber of menu options:");
         ArrayList<String > menu = new ArrayList<>();
         String[] menuC = new String[keyboard.nextInt()];
         keyboard.nextLine();
@@ -158,15 +185,22 @@ public class ConsoleApp {
             case 1:
             {
                 RestaurantCoffe newRestaurant = new RestaurantCoffe(name, address, menu);
-                newRestaurant.setSizeCup();
+                restaurantService.setSizeCup(newRestaurant);
                 restaurantService.registerCoffeRestaurant(newRestaurant);
                 break;
             }
             case 2:
             {
                 RestaurantPizza newRestaurant = new RestaurantPizza(name, address, menu);
-                newRestaurant.setDoughOpions();
+                restaurantService.setDoughOpions(newRestaurant);
                 restaurantService.registerPizzaRestaurant(newRestaurant);
+                break;
+            }
+            case 3:
+            {
+                RestaurantSusshi newRestaurant = new RestaurantSusshi(name, address, menu);
+                restaurantService.addToppings(newRestaurant);
+                restaurantService.registerSushiRestaurant(newRestaurant);
                 break;
             }
         }

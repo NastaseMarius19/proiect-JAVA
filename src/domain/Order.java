@@ -52,65 +52,8 @@ public class Order {
                 ',';
     }
 
-    public void setPayMethod(){
-        System.out.println("Choose paymant method: 1 for card 2 for cash");
-        Scanner keyboard = new Scanner(System.in);
-        int option = keyboard.nextInt();
-        switch (option){
-            case 1:
-                payMethod = "card";
-                break;
-            case 2:
-                payMethod = "cash";
-                break;
-        }
-        if (option != 1 && option != 2){
-            System.out.println("Invalid paymant option");
-            System.exit(1);
-        }
-    }
+    public void setPayMethod(String option){this.payMethod = option;}
 
-    public void setCoffeRestaurant(RestaurantRepository restaurantRepository){
-        System.out.println("Choose the restaurant from the list below:");
-        Scanner keyboard = new Scanner(System.in);
-        List<String> coffeRestaurants = new ArrayList<>();
-        for (int i = 0; i < restaurantRepository.getSize(); i++){
-            if(restaurantRepository.get(i).getClass() == (new RestaurantCoffe(null, null, null)).getClass())
-                coffeRestaurants.add(restaurantRepository.get(i).getName());
-        }
-        int option;
-        if(coffeRestaurants.size() != 0) {
-            for (int i = 0; i < coffeRestaurants.size(); i++)
-                System.out.println(i + coffeRestaurants.get(i));
-            option = keyboard.nextInt();
-        }
-        else option = -1;
+    public void setNameRestaurant(String option){this.nameRestaurant = option;};
 
-        if(option >= 0 && option < coffeRestaurants.size())
-        {
-            nameRestaurant = coffeRestaurants.get(option);
-        }
-    }
-
-    public void setPizzaRestaurant(RestaurantRepository restaurantRepository){
-        System.out.println("Choose the restaurant from the list below:");
-        Scanner keyboard = new Scanner(System.in);
-        List<String> coffeRestaurants = new ArrayList<>();
-        for (int i = 0; i < restaurantRepository.getSize(); i++){
-            if(restaurantRepository.get(i).getClass() == (new RestaurantPizza(null, null, null)).getClass())
-                coffeRestaurants.add(restaurantRepository.get(i).getName());
-        }
-        int option;
-        if(coffeRestaurants.size() != 0) {
-            for (int i = 0; i < coffeRestaurants.size(); i++)
-                System.out.println(i + coffeRestaurants.get(i));
-            option = keyboard.nextInt();
-        }
-        else option = -1;
-
-        if(option >= 0 && option < coffeRestaurants.size())
-        {
-            nameRestaurant = coffeRestaurants.get(option);
-        }
-    }
 }

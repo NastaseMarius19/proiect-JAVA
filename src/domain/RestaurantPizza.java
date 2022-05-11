@@ -25,15 +25,7 @@ public class RestaurantPizza extends Restaurant implements GenericRestaurant<Str
                 '}';
     }
 
-    public void setDoughOpions() {
-        System.out.println("Enter the noumber of options to add:");
-        Scanner keyboard = new Scanner(System.in);
-        int optionsNr = keyboard.nextInt();
-        ArrayList<String> options = new ArrayList<>();
-        for (int i = 0; i < optionsNr; i++) {
-            System.out.println("Enter the " + i + " option:");
-            options.add(keyboard.next());
-        }
-        doughOpions = options;
+    public void setDoughOpions(ArrayList<String > doughOpions){
+        this.doughOpions = doughOpions;
     }
 }

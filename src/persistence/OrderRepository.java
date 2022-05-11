@@ -48,7 +48,7 @@ public class OrderRepository implements GenericRepository<Order> {
             }
             if (choice == 2)
             {
-                entity.setPayMethod();
+                entity.setPayMethod("card");
             }
             if (choice == 3)
             {

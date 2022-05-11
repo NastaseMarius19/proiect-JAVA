@@ -23,17 +23,8 @@ public class RestaurantCoffe extends Restaurant implements GenericRestaurant<Str
                 '}';
     }
 
-    public void setSizeCup(){
-        System.out.println("Enter the noumber of options to add:");
-        Scanner keyboard = new Scanner(System.in);
-        int optionsNr = keyboard.nextInt();
-        ArrayList<String> options = new ArrayList<>();
-        for (int i = 0; i < optionsNr ; i++)
-        {
-            System.out.println("Enter the size cup " + (i+1) + " option:");
-            options.add(keyboard.next());
-        }
-        sizeCup = options;
+    public void setSizeCup(ArrayList<String > sizeCup){
+        this.sizeCup = sizeCup;
     }
 
 }
