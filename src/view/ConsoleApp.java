@@ -9,6 +9,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Scanner;
+import java.util.TreeMap;
 
 public class ConsoleApp {
     
@@ -65,7 +66,10 @@ public class ConsoleApp {
     }
 
     private void sortRestaurants() {
-        System.out.println(restaurantService.getRestaurantRepository());
+        TreeMap<Restaurant, Integer> treeMap = new TreeMap<Restaurant, Integer>(new SortByName());
+        for (int i = 0; i < restaurantService.getSizeRepository(); i++)
+            treeMap.put(restaurantService.getRestaurantRepository().get(i), i);
+        System.out.println("TreeMap: " + treeMap);
     }
 
     private void makeOrder() throws InvalidDataException {
