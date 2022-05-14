@@ -279,7 +279,7 @@ public class OrderService implements GenericOrderCSV {
     @Override
     public void writeCoffeOrder(OrderCoffe object) throws IOException {
         try{
-            FileWriter fw = new FileWriter("files/ordersCoffes.csv",true);
+            FileWriter fw = new FileWriter("files/ordersCoffee.csv",true);
             fw.write("\n" + object.getId() + "," + object.getNameRestaurant() + "," + object.getHomeAddress()
                     + "," + object.getPayMethod() + "," + object.getOptionCoffe() + "," + object.getOptionSizeCup()
                     + ",");

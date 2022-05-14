@@ -1,12 +1,12 @@
 package src.service;
 
-import src.domain.Restaurant;
-import src.domain.RestaurantCoffe;
-import src.domain.RestaurantPizza;
-import src.domain.RestaurantSusshi;
+import src.domain.*;
 import src.exceptions.InvalidDataException;
 import src.persistence.RestaurantRepository;
 
+import java.io.BufferedReader;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.IOException;
 import java.security.cert.CertificateParsingException;
 import java.util.*;
@@ -134,7 +134,62 @@ public class RestaurantService implements GenericRestaurantCSV {
 
     @Override
     public void read() throws IOException {
-
+        String line = "";
+        try {
+            BufferedReader file1 = new BufferedReader(new FileReader("files/coffeeRestaurants.csv"));
+            BufferedReader file2 = new BufferedReader(new FileReader("files/pizzaRestaurants.csv"));
+            BufferedReader file3 = new BufferedReader(new FileReader("files/sushiRestaurants.csv"));
+            while ((line = file1.readLine()) != null){
+                String[] values = line.split(",");
+                RestaurantCoffe restaurantCoffe = new RestaurantCoffe(values[0], values[1], null);
+                ArrayList< String> newMenu = new ArrayList<>();
+                int i = 2;
+                do {
+                    newMenu.add(values[i]);
+                    i++;
+                }while (!values[i-1].endsWith("}"));
+                ArrayList< String> newSizeOptions = new ArrayList<>();
+                for (int j = i; j < values.length; j++)
+                    newSizeOptions.add(values[j]);
+                restaurantCoffe.setMenu(newMenu);
+                restaurantCoffe.setSizeCup(newSizeOptions);
+                restaurantRepository.add(restaurantCoffe);
+            }
+            while ((line = file2.readLine()) != null){
+                String[] values = line.split(",");
+                RestaurantPizza restaurantPizza = new RestaurantPizza(values[0], values[1], null);
+                ArrayList< String> newMenu = new ArrayList<>();
+                int i = 2;
+                do {
+                    newMenu.add(values[i]);
+                    i++;
+                }while (!values[i-1].endsWith("}"));
+                ArrayList< String> newDoughOptions = new ArrayList<>();
+                for (int j = i; j < values.length; j++)
+                        newDoughOptions.add(values[j]);
+                restaurantPizza.setMenu(newMenu);
+                restaurantPizza.setDoughOpions(newDoughOptions);
+                restaurantRepository.add(restaurantPizza);
+            }
+            while ((line = file3.readLine()) != null){
+                String[] values = line.split(",");
+                RestaurantSusshi restaurantSusshi = new RestaurantSusshi(values[0], values[1], null);
+                ArrayList< String> newMenu = new ArrayList<>();
+                int i = 2;
+                do {
+                    newMenu.add(values[i]);
+                    i++;
+                }while (!values[i-1].endsWith("}"));
+                ArrayList< String> newTopingOptions = new ArrayList<>();
+                for (int j = i; j < values.length; j++)
+                    newTopingOptions.add(values[j]);
+                restaurantSusshi.setMenu(newMenu);
+                restaurantSusshi.setToppings(newTopingOptions);
+                restaurantRepository.add(restaurantSusshi);
+            }
+        }catch (FileNotFoundException e){
+            e.printStackTrace();
+        }
     }
 
     @Override

@@ -2,7 +2,7 @@ package src.domain;
 
 public class OrderSushi extends Order{
 
-    private String extraTopping = null;
+    private String extraTopping;
 
     public OrderSushi(String nameRestaurant, String homeAddress, String payMethod, String extraTopping) {
         super(nameRestaurant, homeAddress, payMethod);

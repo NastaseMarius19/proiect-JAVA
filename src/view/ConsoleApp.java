@@ -19,6 +19,7 @@ public class ConsoleApp {
     private void loadCSVfiles(){
         try {
             orderService.read();
+            restaurantService.read();
         }catch (IOException e)
         {
             throw new RuntimeException(e);
@@ -95,6 +96,12 @@ public class ConsoleApp {
                         }
                     }
                     orderService.registerNewPizzaOrder(newOrder);
+                    try {
+                        orderService.writePizzaOrder(newOrder);
+                    }catch (IOException e)
+                    {
+                        e.printStackTrace();
+                    }
                     break;
                 }
             }
@@ -122,6 +129,12 @@ public class ConsoleApp {
                             break;
                         }
                     orderService.registerNewCoffeOrder(newOrder);
+                    try {
+                        orderService.writeCoffeOrder(newOrder);
+                    }catch (IOException e)
+                    {
+                        e.printStackTrace();
+                    }
                     break;
                 }
             }
@@ -148,6 +161,11 @@ public class ConsoleApp {
                             break;
                         }
                     orderService.registerNewSushiOrder(newOrder);
+                    try {
+                        orderService.writeSushiOrder(newOrder);
+                    }catch (IOException e){
+                        e.printStackTrace();
+                    }
                     break;
                 }
             }
