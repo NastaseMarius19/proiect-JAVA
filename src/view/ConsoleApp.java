@@ -86,11 +86,12 @@ public class ConsoleApp {
                     break;
                 }
                 else {
-                    OrderPizza newOrder = new OrderPizza(null, null, null, null);
+                    OrderPizza newOrder = new OrderPizza(null, null, null, null,null);
                     orderService.setOrder(newOrder);
                     orderService.setPizzaRestaurant(restaurantService.getRestaurantRepository(), newOrder);
                     for (int i = 0; i < restaurantService.getRestaurantRepository().getSize(); i++){
                         if(restaurantService.getRestaurantRepository().get(i).getName().equals(newOrder.getNameRestaurant())){
+                            orderService.choosePizzaOption(restaurantService.getRestaurantRepository().getPizzaRestaurant(i), newOrder);
                             orderService.chooseDoughPizza(restaurantService.getRestaurantRepository().getPizzaRestaurant(i), newOrder);
                             break;
                         }
@@ -152,11 +153,12 @@ public class ConsoleApp {
                     break;
                 }
                 else {
-                    OrderSushi newOrder = new OrderSushi(null,null,null,null);
+                    OrderSushi newOrder = new OrderSushi(null,null,null,null, null);
                     orderService.setOrder(newOrder);
                     orderService.setSushiRestaurant(restaurantService.getRestaurantRepository(), newOrder);
                     for (int i = 0; i < restaurantService.getSizeRepository(); i++)
                         if (restaurantService.getRestaurantRepository().get(i).getName().equals(newOrder.getNameRestaurant())) {
+                            orderService.chooseSushi(restaurantService.getRestaurantRepository().getSushiRestaurant(i), newOrder);
                             orderService.chooseExtraTopping(restaurantService.getRestaurantRepository().getSushiRestaurant(i), newOrder);
                             break;
                         }
@@ -218,6 +220,11 @@ public class ConsoleApp {
                 RestaurantPizza newRestaurant = new RestaurantPizza(name, address, menu);
                 restaurantService.setDoughOpions(newRestaurant);
                 restaurantService.registerPizzaRestaurant(newRestaurant);
+                try {
+                    restaurantService.writePizzaRestaurant(newRestaurant);
+                }catch (IOException e){
+                    e.printStackTrace();
+                }
                 break;
             }
             case 3:
@@ -236,9 +243,8 @@ public class ConsoleApp {
             if (option >= 1 && option <= 8)
                 return option;
         }catch (InvalidDataException ignored){
-
+            System.out.println("Invalid option. Try again");
         }
-        System.out.println("Invalid option. Try again");
         return readOption();
     }
 

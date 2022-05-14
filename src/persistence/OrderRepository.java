@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.Scanner;
 
 public class OrderRepository implements GenericRepository<Order> {
-    private List<Order> order = new ArrayList<>();
+    private final List<Order> order = new ArrayList<>();
 
     @Override
     public String toString() {
@@ -38,11 +38,11 @@ public class OrderRepository implements GenericRepository<Order> {
 
         int choice = keyboard.nextInt();
 
-        while (choice != 3){
+        while (choice != 0){
             if(choice == 1)
             {
                 System.out.println("Enter the new address");
-                String newAddress = new String();
+                String newAddress;
                 newAddress = keyboard.next();
                 entity.setHomeAddress(newAddress);
             }
@@ -57,6 +57,7 @@ public class OrderRepository implements GenericRepository<Order> {
             }
             choice = keyboard.nextInt();
         }
+
         saveChanges(entity);
     }
 

@@ -22,7 +22,7 @@ public class RestaurantSusshi  extends RestaurantPizza implements GenericRestaur
 
     @Override
     public String toString() {
-        return super.toString() +
+        return super.toString() + "," +
                 "toppings=" + toppings +
                 '}';
     }

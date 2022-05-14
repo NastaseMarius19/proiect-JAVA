@@ -1,18 +1,20 @@
 package src.service;
 
-import src.domain.*;
+import src.domain.Restaurant;
+import src.domain.RestaurantCoffe;
+import src.domain.RestaurantPizza;
+import src.domain.RestaurantSusshi;
 import src.exceptions.InvalidDataException;
 import src.persistence.RestaurantRepository;
 
-import java.io.BufferedReader;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
-import java.security.cert.CertificateParsingException;
-import java.util.*;
+import java.io.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
+import java.util.Scanner;
 
 public class RestaurantService implements GenericRestaurantCSV {
-    private RestaurantRepository restaurantRepository = new RestaurantRepository();
+    private final RestaurantRepository restaurantRepository = new RestaurantRepository();
 
     public void registerCoffeRestaurant(RestaurantCoffe newRestaurant) throws InvalidDataException {
         if (newRestaurant.getName() == null || newRestaurant.getName().trim().isEmpty()){
@@ -71,7 +73,7 @@ public class RestaurantService implements GenericRestaurantCSV {
     public Restaurant[] getRestaurantWithName(String name){
         List<Restaurant> result = new ArrayList<>();
         for(int i = 0; i < restaurantRepository.getSize(); i++){
-            if(restaurantRepository.get(i) != null && restaurantRepository.get(i).getName() == name){
+            if(restaurantRepository.get(i) != null && Objects.equals(restaurantRepository.get(i).getName(), name)){
                 result.add(restaurantRepository.get(i));
             }
         }
@@ -147,7 +149,7 @@ public class RestaurantService implements GenericRestaurantCSV {
                 do {
                     newMenu.add(values[i]);
                     i++;
-                }while (!values[i-1].endsWith("}"));
+                }while (!values[i-1].endsWith("]"));
                 ArrayList< String> newSizeOptions = new ArrayList<>();
                 for (int j = i; j < values.length; j++)
                     newSizeOptions.add(values[j]);
@@ -163,7 +165,7 @@ public class RestaurantService implements GenericRestaurantCSV {
                 do {
                     newMenu.add(values[i]);
                     i++;
-                }while (!values[i-1].endsWith("}"));
+                }while (!values[i-1].endsWith("]"));
                 ArrayList< String> newDoughOptions = new ArrayList<>();
                 for (int j = i; j < values.length; j++)
                         newDoughOptions.add(values[j]);
@@ -179,7 +181,7 @@ public class RestaurantService implements GenericRestaurantCSV {
                 do {
                     newMenu.add(values[i]);
                     i++;
-                }while (!values[i-1].endsWith("}"));
+                }while (!values[i-1].endsWith("]"));
                 ArrayList< String> newTopingOptions = new ArrayList<>();
                 for (int j = i; j < values.length; j++)
                     newTopingOptions.add(values[j]);
@@ -194,16 +196,43 @@ public class RestaurantService implements GenericRestaurantCSV {
 
     @Override
     public void writePizzaRestaurant(RestaurantPizza object) throws IOException {
+        try{
+            FileWriter fw = new FileWriter("files/pizzaRestaurants.csv",true);
+            fw.write("\n" + object.getName() + "," + object.getAddress()
+                    + "," + object.getMenu() + "," + object.getDough()
+                    + ",");
+            fw.close();
 
+        }catch (IOException e){
+            e.printStackTrace();
+        }
     }
 
     @Override
     public void writeSushiRestaurant(RestaurantSusshi object) throws IOException {
+        try{
+            FileWriter fw = new FileWriter("files/sushiRestaurants.csv",true);
+            fw.write("\n" + object.getName() + "," + object.getAddress()
+                    + "," + object.getMenu() + "," + object.getToppings()
+                    + ",");
+            fw.close();
 
+        }catch (IOException e){
+            e.printStackTrace();
+        }
     }
 
     @Override
     public void writeCoffeRestaurant(RestaurantCoffe object) throws IOException {
+        try{
+            FileWriter fw = new FileWriter("files/coffeeRestaurants.csv",true);
+            fw.write("\n" + object.getName() + "," + object.getAddress()
+                    + "," + object.getMenu() + "," + object.getSizeCup()
+                    + ",");
+            fw.close();
 
+        }catch (IOException e){
+            e.printStackTrace();
+        }
     }
 }

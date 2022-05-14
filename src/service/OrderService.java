@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.Scanner;
 
 public class OrderService implements GenericOrderCSV {
-    private OrderRepository orderRepository = new OrderRepository();
+    private final OrderRepository orderRepository = new OrderRepository();
 
     public void registerNewPizzaOrder(OrderPizza newPizzaOrder) throws InvalidDataException {
         if (newPizzaOrder.getHomeAddress() == null || newPizzaOrder.getHomeAddress().trim().isEmpty())
@@ -113,7 +113,7 @@ public class OrderService implements GenericOrderCSV {
         Scanner keyboard = new Scanner(System.in);
         List<String> coffeRestaurants = new ArrayList<>();
         for (int i = 0; i < restaurantRepository.getSize(); i++){
-            if(restaurantRepository.get(i).getClass() == (new RestaurantCoffe(null, null, null)).getClass())
+            if(restaurantRepository.get(i).getClass() == RestaurantCoffe.class)
                 coffeRestaurants.add(restaurantRepository.get(i).getName());
         }
         int option;
@@ -135,7 +135,7 @@ public class OrderService implements GenericOrderCSV {
         Scanner keyboard = new Scanner(System.in);
         List<String> sushiRestaurants = new ArrayList<>();
         for (int i = 0; i < restaurantRepository.getSize(); i++){
-            if(restaurantRepository.get(i).getClass() == (new RestaurantSusshi(null, null, null)).getClass())
+            if(restaurantRepository.get(i).getClass() == RestaurantSusshi.class)
                 sushiRestaurants.add(restaurantRepository.get(i).getName());
         }
         int option;
@@ -157,7 +157,7 @@ public class OrderService implements GenericOrderCSV {
         Scanner keyboard = new Scanner(System.in);
         List<String> coffeRestaurants = new ArrayList<>();
         for (int i = 0; i < restaurantRepository.getSize(); i++){
-            if(restaurantRepository.get(i).getClass() == (new RestaurantPizza(null, null, null)).getClass())
+            if(restaurantRepository.get(i).getClass() == RestaurantPizza.class)
                 coffeRestaurants.add(restaurantRepository.get(i).getName());
         }
         int option;
@@ -190,7 +190,20 @@ public class OrderService implements GenericOrderCSV {
             System.exit(1);
         }
     }
-
+    public void choosePizzaOption(RestaurantPizza restaurantPzza, OrderPizza orderPizza) {
+        Scanner keyboard = new Scanner(System.in);
+        int optionPizza;
+        System.out.println("Choose your pizza from the menu:");
+        for(int i = 0; i < restaurantPzza.getMenu().size(); i++)
+        {
+            System.out.println(i + " - " + restaurantPzza.getMenu().get(i));
+        }
+        optionPizza = keyboard.nextInt();
+        if(optionPizza >= 0 && optionPizza < restaurantPzza.getMenu().size()){
+            orderPizza.setPizzaOption(restaurantPzza.getMenu().get(optionPizza));
+        }
+        else System.out.println("Option invalid");
+    }
     public void chooseCoffe(RestaurantCoffe restaurantCoffe, OrderCoffe orderCoffe) {
         Scanner keyboard = new Scanner(System.in);
         int optionCoffe;
@@ -202,6 +215,21 @@ public class OrderService implements GenericOrderCSV {
         optionCoffe = keyboard.nextInt();
         if(optionCoffe >= 0 && optionCoffe < restaurantCoffe.getMenu().size()){
             orderCoffe.setOptionCoffe(restaurantCoffe.getMenu().get(optionCoffe));
+        }
+        else System.out.println("Option invalid");
+    }
+
+    public void chooseSushi(RestaurantSusshi restaurantSushi, OrderSushi orderSushi) {
+        Scanner keyboard = new Scanner(System.in);
+        int optionSushi;
+        System.out.println("Choose your coffe from the menu:");
+        for(int i = 0; i < restaurantSushi.getMenu().size(); i++)
+        {
+            System.out.println(i + " - " + restaurantSushi.getMenu().get(i));
+        }
+        optionSushi = keyboard.nextInt();
+        if(optionSushi >= 0 && optionSushi < restaurantSushi.getMenu().size()){
+            orderSushi.setMenuOption(restaurantSushi.getMenu().get(optionSushi));
         }
         else System.out.println("Option invalid");
     }
@@ -237,7 +265,7 @@ public class OrderService implements GenericOrderCSV {
 
     @Override
     public void read() throws IOException {
-        String line = "";
+        String line;
         try {
             BufferedReader file1 = new BufferedReader(new FileReader("files/ordersCoffee.csv"));
             BufferedReader file2 = new BufferedReader(new FileReader("files/ordersPizza.csv"));
@@ -249,12 +277,12 @@ public class OrderService implements GenericOrderCSV {
             }
             while ((line = file2.readLine()) != null){
                 String[] values = line.split(",");
-                OrderPizza orderPizza = new OrderPizza(values[0], values[1], values[2], values[3]);
+                OrderPizza orderPizza = new OrderPizza(values[0], values[1], values[2], values[3], values[4]);
                 orderRepository.add(orderPizza);
             }
             while ((line = file3.readLine()) != null){
                 String[] values = line.split(",");
-                OrderSushi orderSushi = new OrderSushi(values[0], values[1], values[2], values[3]);
+                OrderSushi orderSushi = new OrderSushi(values[0], values[1], values[2], values[3], values[4]);
                 orderRepository.add(orderSushi);
             }
         }catch (FileNotFoundException e){
@@ -266,8 +294,8 @@ public class OrderService implements GenericOrderCSV {
     public void writePizzaOrder(OrderPizza object) throws IOException {
         try{
             FileWriter fw = new FileWriter("files/ordersPizza.csv",true);
-            fw.write("\n" + object.getId() + "," + object.getNameRestaurant() + "," + object.getHomeAddress()
-                    + "," + object.getPayMethod() + "," + object.getDoughOption()
+            fw.write("\n" + object.getNameRestaurant() + "," + object.getHomeAddress()
+                    + "," + object.getPayMethod() + "," + object.getDoughOption() + "," + object.getPizzaOption()
                     + ",");
             fw.close();
 
@@ -280,7 +308,7 @@ public class OrderService implements GenericOrderCSV {
     public void writeCoffeOrder(OrderCoffe object) throws IOException {
         try{
             FileWriter fw = new FileWriter("files/ordersCoffee.csv",true);
-            fw.write("\n" + object.getId() + "," + object.getNameRestaurant() + "," + object.getHomeAddress()
+            fw.write("\n" + object.getNameRestaurant() + "," + object.getHomeAddress()
                     + "," + object.getPayMethod() + "," + object.getOptionCoffe() + "," + object.getOptionSizeCup()
                     + ",");
             fw.close();
@@ -294,8 +322,8 @@ public class OrderService implements GenericOrderCSV {
     public void writeSushiOrder(OrderSushi object) throws IOException {
         try{
             FileWriter fw = new FileWriter("files/ordersSushi.csv",true);
-            fw.write("\n" + object.getId() + "," + object.getNameRestaurant() + "," + object.getHomeAddress()
-                    + "," + object.getPayMethod() + "," + object.getExtraTopping()
+            fw.write("\n" + object.getNameRestaurant() + "," + object.getHomeAddress()
+                    + "," + object.getPayMethod() + "," + object.getExtraTopping() + "," + object.getMenuOption()
                     + ",");
             fw.close();
 
