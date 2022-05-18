@@ -2,6 +2,7 @@ package src.view;
 
 import src.domain.*;
 import src.exceptions.InvalidDataException;
+import src.service.AuditService;
 import src.service.OrderService;
 import src.service.RestaurantService;
 
@@ -16,6 +17,7 @@ public class ConsoleApp {
     private final Scanner keyboard = new Scanner(System.in);
     private final RestaurantService restaurantService = new RestaurantService();
     private final OrderService orderService = new OrderService();
+    private final AuditService auditService = new AuditService();
 
     private void loadCSVfiles(){
         try {
@@ -40,23 +42,30 @@ public class ConsoleApp {
         switch (option){
             case 1:
                 addRestaurant();
+                auditService.add("adaugat restaurant");
                 break;
             case 2:
                 selectRestaurant();
+                auditService.add("selectat restaurant dupa nume");
                 break;
             case 3:
                 selectALlRestaurants();
+                auditService.add("selectat toate restaurantele");
                 break;
             case 4:
                 makeOrder();
+                auditService.add("adugat o comanda");
                 break;
             case 5:
                 sortRestaurants();
+                auditService.add("sortat restaurante");
                 break;
             case 6:
                 selectAllOrders();
+                auditService.add("selectat comenzi");
                 break;
             case 8:
+                auditService.add("exit");
                 System.exit(0);
         }
     }
@@ -217,6 +226,11 @@ public class ConsoleApp {
                 RestaurantCoffe newRestaurant = new RestaurantCoffe(name, address, menu);
                 restaurantService.setSizeCup(newRestaurant);
                 restaurantService.registerCoffeRestaurant(newRestaurant);
+                try {
+                    restaurantService.writeCoffeRestaurant(newRestaurant);
+                }catch (IOException e){
+                    e.printStackTrace();
+                }
                 break;
             }
             case 2:
@@ -236,6 +250,11 @@ public class ConsoleApp {
                 RestaurantSusshi newRestaurant = new RestaurantSusshi(name, address, menu);
                 restaurantService.addToppings(newRestaurant);
                 restaurantService.registerSushiRestaurant(newRestaurant);
+                try {
+                    restaurantService.writeSushiRestaurant(newRestaurant);
+                }catch (IOException e){
+                    e.printStackTrace();
+                }
                 break;
             }
         }
