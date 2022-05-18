@@ -64,10 +64,21 @@ public class ConsoleApp {
                 selectAllOrders();
                 auditService.add("selectat comenzi");
                 break;
+            case 7:
+                sortOrders();
+                auditService.add("sortat comenzi");
+                break;
             case 8:
                 auditService.add("exit");
                 System.exit(0);
         }
+    }
+
+    private void sortOrders() {
+        TreeMap<Order, Integer> treeMap = new TreeMap<Order, Integer>(new SortByPayMethod());
+        for (int i = 0; i < orderService.getOrderRepository().getSize(); i++)
+            treeMap.put(orderService.getOrderRepository().get(i), i);
+        System.out.println("TreeMap: " + treeMap);
     }
 
     private void selectAllOrders() {
