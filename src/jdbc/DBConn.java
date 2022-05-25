@@ -20,10 +20,9 @@ public class DBConn {
     public void startConn() throws SQLException, ClassNotFoundException {
         if(conn == null) {
             Class.forName("com.mysql.cj.jdbc.Driver");
-
-            String url = "jdbc:mysql://localhost:3306/swdb_java";
+            String url = "jdbc:mysql://localhost:3306/java-proj";
             String user = "root";
-            String pass = "antiguas";
+            String pass = "";
 
             conn = DriverManager.getConnection(url, user, pass);
         }
