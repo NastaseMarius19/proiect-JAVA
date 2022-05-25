@@ -2,10 +2,13 @@ package src.view;
 
 import src.domain.*;
 import src.exceptions.InvalidDataException;
+import src.jdbc.DBConn;
+import src.jdbc.ReadDB;
 import src.service.*;
 
 import java.io.IOException;
 import java.lang.ref.WeakReference;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Scanner;
@@ -20,9 +23,20 @@ public class ConsoleApp {
     private final ReadCSV readCSV = new ReadCSV();
     private final WriteCSV writeCSV = new WriteCSV();
 
+    DBConn dbConn = DBConn.getInstance();
+    ReadDB readDB = ReadDB.getInstance();
+
     private void loadCSVfiles(){
         try {
             readCSV.loadFiles(orderService,restaurantService);
+            try {
+                dbConn.startConn();
+                readDB.loadObjects(orderService);
+            } catch (SQLException e) {
+                e.printStackTrace();
+            } catch (ClassNotFoundException e) {
+                e.printStackTrace();
+            }
         }catch (IOException e)
         {
             throw new RuntimeException(e);
