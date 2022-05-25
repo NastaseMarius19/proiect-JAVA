@@ -2,11 +2,10 @@ package src.view;
 
 import src.domain.*;
 import src.exceptions.InvalidDataException;
-import src.service.AuditService;
-import src.service.OrderService;
-import src.service.RestaurantService;
+import src.service.*;
 
 import java.io.IOException;
+import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Scanner;
@@ -18,14 +17,17 @@ public class ConsoleApp {
     private final RestaurantService restaurantService = new RestaurantService();
     private final OrderService orderService = new OrderService();
     private final AuditService auditService = new AuditService();
+    private final ReadCSV readCSV = new ReadCSV();
+    private final WriteCSV writeCSV = new WriteCSV();
 
     private void loadCSVfiles(){
         try {
-            orderService.read();
-            restaurantService.read();
+            readCSV.loadFiles(orderService,restaurantService);
         }catch (IOException e)
         {
             throw new RuntimeException(e);
+        } catch (InvalidDataException e) {
+            e.printStackTrace();
         }
     }
     public static void main(String [] args) throws InvalidDataException {
@@ -75,7 +77,7 @@ public class ConsoleApp {
     }
 
     private void sortOrders() {
-        TreeMap<Order, Integer> treeMap = new TreeMap<Order, Integer>(new SortByPayMethod());
+        TreeMap<Order, Integer> treeMap = new TreeMap<>(new SortByPayMethod());
         for (int i = 0; i < orderService.getOrderRepository().getSize(); i++)
             treeMap.put(orderService.getOrderRepository().get(i), i);
         System.out.println("TreeMap: " + treeMap);
@@ -86,7 +88,7 @@ public class ConsoleApp {
     }
 
     private void sortRestaurants() {
-        TreeMap<Restaurant, Integer> treeMap = new TreeMap<Restaurant, Integer>(new SortByName());
+        TreeMap<Restaurant, Integer> treeMap = new TreeMap<>(new SortByName());
         for (int i = 0; i < restaurantService.getSizeRepository(); i++)
             treeMap.put(restaurantService.getRestaurantRepository().get(i), i);
         System.out.println("TreeMap: " + treeMap);
@@ -121,12 +123,7 @@ public class ConsoleApp {
                         }
                     }
                     orderService.registerNewPizzaOrder(newOrder);
-                    try {
-                        orderService.writePizzaOrder(newOrder);
-                    }catch (IOException e)
-                    {
-                        e.printStackTrace();
-                    }
+                    writeCSV.writePizzaOrder(newOrder);
                     break;
                 }
             }
@@ -154,12 +151,7 @@ public class ConsoleApp {
                             break;
                         }
                     orderService.registerNewCoffeOrder(newOrder);
-                    try {
-                        orderService.writeCoffeOrder(newOrder);
-                    }catch (IOException e)
-                    {
-                        e.printStackTrace();
-                    }
+                    writeCSV.writeCoffeOrder(newOrder);
                     break;
                 }
             }
@@ -187,11 +179,7 @@ public class ConsoleApp {
                             break;
                         }
                     orderService.registerNewSushiOrder(newOrder);
-                    try {
-                        orderService.writeSushiOrder(newOrder);
-                    }catch (IOException e){
-                        e.printStackTrace();
-                    }
+                    writeCSV.writeSushiOrder(newOrder);
                     break;
                 }
             }
@@ -237,11 +225,7 @@ public class ConsoleApp {
                 RestaurantCoffe newRestaurant = new RestaurantCoffe(name, address, menu);
                 restaurantService.setSizeCup(newRestaurant);
                 restaurantService.registerCoffeRestaurant(newRestaurant);
-                try {
-                    restaurantService.writeCoffeRestaurant(newRestaurant);
-                }catch (IOException e){
-                    e.printStackTrace();
-                }
+                writeCSV.writeCoffeRestaurant(newRestaurant);
                 break;
             }
             case 2:
@@ -249,11 +233,7 @@ public class ConsoleApp {
                 RestaurantPizza newRestaurant = new RestaurantPizza(name, address, menu);
                 restaurantService.setDoughOpions(newRestaurant);
                 restaurantService.registerPizzaRestaurant(newRestaurant);
-                try {
-                    restaurantService.writePizzaRestaurant(newRestaurant);
-                }catch (IOException e){
-                    e.printStackTrace();
-                }
+                writeCSV.writePizzaRestaurant(newRestaurant);
                 break;
             }
             case 3:
@@ -261,11 +241,7 @@ public class ConsoleApp {
                 RestaurantSusshi newRestaurant = new RestaurantSusshi(name, address, menu);
                 restaurantService.addToppings(newRestaurant);
                 restaurantService.registerSushiRestaurant(newRestaurant);
-                try {
-                    restaurantService.writeSushiRestaurant(newRestaurant);
-                }catch (IOException e){
-                    e.printStackTrace();
-                }
+                writeCSV.writeSushiRestaurant(newRestaurant);
                 break;
             }
         }
