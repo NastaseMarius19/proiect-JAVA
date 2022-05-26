@@ -2,8 +2,11 @@ package src.jdbc;
 
 import src.domain.OrderCoffe;
 import src.domain.OrderPizza;
+import src.domain.OrderSushi;
+import src.domain.RestaurantSusshi;
 import src.exceptions.InvalidDataException;
 import src.service.OrderService;
+import src.service.RestaurantService;
 
 import java.io.IOException;
 import java.sql.*;
@@ -52,6 +55,27 @@ public class ReadDB {
                                 rs.getString("payMethod"),
                                 rs.getString("doughOption"),
                                 rs.getString("pizzaOption")
+                        )
+                );
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } catch (InvalidDataException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void loadSushiOrders(OrderService s, Statement stmt) {
+        try {
+            ResultSet rs = stmt.executeQuery("SELECT * FROM ordercoffee");
+            while(rs.next()) {
+                s.registerNewSushiOrder(
+                        new OrderSushi(
+                                rs.getString("nameRestaurant"),
+                                rs.getString("homeAddress"),
+                                rs.getString("payMethod"),
+                                rs.getString("extraTopping"),
+                                rs.getString("menuOption")
                         )
                 );
             }
